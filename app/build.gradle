@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.example.claritus.claritus"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets { release { java.srcDirs = ['src/release/java', 'src/release/java/'] } }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
+    implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.android.support:support-v4:$supportLibVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+
+
+    implementation "android.arch.navigation:navigation-fragment:$navVersion"
+    implementation "android.arch.navigation:navigation-ui:$navVersion"
+
+    testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "android.arch.persistence.room:testing:$roomVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+    androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+}
