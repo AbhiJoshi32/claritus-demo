@@ -19,6 +19,7 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 @Module(includes = ViewModelModule.class)
 class AppModule {
@@ -32,7 +33,8 @@ class AppModule {
     ClaritusService provideClaritusService() {
         return new Retrofit.Builder()
                 .baseUrl("http://10.10.1.29/clarituscore/backend/web/index.php/")
-                .addConverterFactory(GsonConverterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()
                 .create(ClaritusService.class);

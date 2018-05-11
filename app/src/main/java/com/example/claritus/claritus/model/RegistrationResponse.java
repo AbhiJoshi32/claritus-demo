@@ -1,69 +1,71 @@
 
 package com.example.claritus.claritus.model;
 
+import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse {
+@SuppressWarnings("unused")
+public class RegistrationResponse {
 
     @SerializedName("api_current_token")
-    private String ApiCurrentToken;
+    private String mApiCurrentToken;
     @SerializedName("code")
-    private Long Code;
+    private Long mCode;
     @SerializedName("data")
-    private com.example.claritus.claritus.model.Data Data;
+    private List<Object> mData;
     @SerializedName("message")
-    private String Message;
+    private String mMessage;
     @SerializedName("reason")
-    private Object Reason;
+    private Object mReason;
     @SerializedName("status")
-    private Long Status;
+    private Long mStatus;
 
     public String getApiCurrentToken() {
-        return ApiCurrentToken;
+        return mApiCurrentToken;
     }
 
     public void setApiCurrentToken(String apiCurrentToken) {
-        ApiCurrentToken = apiCurrentToken;
+        mApiCurrentToken = apiCurrentToken;
     }
 
     public Long getCode() {
-        return Code;
+        return mCode;
     }
 
     public void setCode(Long code) {
-        Code = code;
+        mCode = code;
     }
 
-    public com.example.claritus.claritus.model.Data getData() {
-        return Data;
+    public List<Object> getData() {
+        return mData;
     }
 
-    public void setData(com.example.claritus.claritus.model.Data data) {
-        Data = data;
+    public void setData(List<Object> data) {
+        mData = data;
     }
 
     public String getMessage() {
-        return Message;
+        return mMessage;
     }
 
     public void setMessage(String message) {
-        Message = message;
+        mMessage = message;
     }
 
     public Object getReason() {
-        return Reason;
+        return mReason;
     }
 
     public void setReason(Object reason) {
-        Reason = reason;
+        mReason = reason;
     }
 
     public Long getStatus() {
-        return Status;
+        return mStatus;
     }
 
     public void setStatus(Long status) {
-        Status = status;
+        mStatus = status;
     }
 
 }

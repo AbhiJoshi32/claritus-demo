@@ -1,4 +1,4 @@
-package com.example.claritus.claritus.model;
+package com.example.claritus.claritus.splash;
 
 public class AndroidAuth {
     private String id;

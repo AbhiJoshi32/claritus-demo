@@ -28,9 +28,9 @@ public class NavigationController {
     private final int containerId;
     private final FragmentManager fragmentManager;
     @Inject
-    public NavigationController(FragmentManager fragmentManager) {
+    public NavigationController(AuthActivity authActivity) {
         this.containerId = R.id.authContainer;
-        this.fragmentManager = fragmentManager;
+        this.fragmentManager = authActivity.getSupportFragmentManager();
     }
 
     public void navigateToLogin() {

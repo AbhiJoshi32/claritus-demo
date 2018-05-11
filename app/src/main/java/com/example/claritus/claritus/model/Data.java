@@ -6,14 +6,14 @@ import com.google.gson.annotations.SerializedName;
 public class Data {
 
     @SerializedName("API_CURRENT_TOKEN")
-    private String APICURRENTTOKEN;
+    private String mAPICURRENTTOKEN;
 
     public String getAPICURRENTTOKEN() {
-        return APICURRENTTOKEN;
+        return mAPICURRENTTOKEN;
     }
 
     public void setAPICURRENTTOKEN(String APICURRENTTOKEN) {
-        this.APICURRENTTOKEN = APICURRENTTOKEN;
+        mAPICURRENTTOKEN = APICURRENTTOKEN;
     }
 
 }

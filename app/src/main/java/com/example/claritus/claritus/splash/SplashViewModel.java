@@ -1,12 +1,10 @@
 package com.example.claritus.claritus.splash;
 
-import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
-import com.example.claritus.claritus.model.AndroidAuth;
 import com.example.claritus.claritus.model.Resource;
 import com.example.claritus.claritus.repository.MiscRepository;
 import com.example.claritus.claritus.utils.AbsentLiveData;

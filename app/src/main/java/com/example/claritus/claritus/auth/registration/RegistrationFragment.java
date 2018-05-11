@@ -1,4 +1,4 @@
-package com.example.claritus.claritus.auth.login;
+package com.example.claritus.claritus.auth.registration;
 
 
 import android.arch.lifecycle.ViewModelProvider;
@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.auth.NavigationController;
 import com.example.claritus.claritus.databinding.FragmentLoginBinding;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-public class LoginFragment extends Fragment implements Injectable {
+public class RegistrationFragment extends Fragment implements Injectable {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -31,9 +32,9 @@ public class LoginFragment extends Fragment implements Injectable {
     NavigationController navigationController;
     private AutoClearedValue<FragmentLoginBinding> binding;
 
-    LoginViewModel loginViewModel;
+    RegistrationViewModel registrationViewModel;
 
-    public LoginFragment() {
+    public RegistrationFragment() {
         // Required empty public constructor
     }
 
@@ -51,8 +52,8 @@ public class LoginFragment extends Fragment implements Injectable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loginViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
-        loginViewModel.getToken().observe(this,token->{
+        registrationViewModel = ViewModelProviders.of(this, viewModelFactory).get(RegistrationViewModel.class);
+        registrationViewModel.getToken().observe(this, token->{
             Timber.d("Got a res");
             if (token != null) {
                 if (token.status == Status.SUCCESS)
@@ -63,8 +64,8 @@ public class LoginFragment extends Fragment implements Injectable {
         binding.get().button.setOnClickListener(view -> {
             String email = binding.get().emailEdit.getText().toString();
             String password = binding.get().passEdit.getText().toString();
-            loginViewModel.setEmail(email);
-            loginViewModel.setPassword(password);
+            registrationViewModel.setEmail(email);
+            registrationViewModel.setPassword(password);
         });
     }
 }

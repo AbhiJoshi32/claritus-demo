@@ -29,6 +29,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "android.arch.lifecycle:common-java8:$lifecycleVersion"
@@ -39,6 +40,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "com.android.support:support-v4:$supportLibVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"

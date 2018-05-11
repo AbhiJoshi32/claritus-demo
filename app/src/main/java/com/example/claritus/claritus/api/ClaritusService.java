@@ -24,18 +24,35 @@ import com.example.claritus.claritus.model.LoginResponse;
 import com.example.claritus.claritus.model.User;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ClaritusService {
     @GET("parentapi/authorize/index")
-    Call<AuthorizeResponse> getAuthorize(@Header("DeviceId") String devceId,
+    Call<String> getAuthorize(@Header("DeviceId") String devceId,
                                                           @Header("ApiKey") String apiKey,
                                                           @Header("DeviceType") String devceType,
                                                           @Header("DeviceToken") String devceToken);
-    @GET("users/{login}")
-    LiveData<ApiResponse<User>> getUser(@Path("login") String login);
-
-    Call<LoginResponse> loginUser(String email, String password);
+//    @GET("users/{login}")
+//    LiveData<ApiResponse<User>> getUser(@Path("login") String login);
+    @FormUrlEncoded
+    @POST("user/Api/v1/user/login")
+    Call<String> loginUser(@Header("AuthorizedToken") String authToken,
+                           @Header("DeviceId") String deviceId,
+                           @Field("username") String email,
+                           @Field("password") String password);
+    @FormUrlEncoded
+    @POST("user/Api/v1/user/create")
+    Call<String> registerUser(@Header("AuthorizedToken") String authToken,
+                              @Header("DeviceId") String deviceId,
+                              @Field("username") String email,
+                              @Field("password") String password, String lastName,
+                              @Field("first_name") String firstName,
+                              @Field("phone") String phone,
+                              @Field("user_type") String userType,
+                              @Field("role") String role);
 }

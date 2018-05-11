@@ -26,6 +26,7 @@ public class SplashActivity extends AppCompatActivity{
     ViewModelProvider.Factory viewModelFactory;
 
     private SplashViewModel splashViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,17 +38,14 @@ public class SplashActivity extends AppCompatActivity{
             if (stringResource != null) {
                 Timber.d(stringResource.data);
                 if (stringResource.status==Status.SUCCESS) {
-                    startActivity(new Intent(SplashActivity.this, AuthActivity.class));
+                    Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
             }
             else Timber.d("null");
         });
         splashViewModel.setToken("sdasd");
         splashViewModel.setAndroidIdLiveData("asdsa");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 }

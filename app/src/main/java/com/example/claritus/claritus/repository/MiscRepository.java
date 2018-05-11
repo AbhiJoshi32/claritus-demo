@@ -2,14 +2,17 @@ package com.example.claritus.claritus.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Transformations;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import com.example.claritus.claritus.api.ClaritusService;
-import com.example.claritus.claritus.db.UserDao;
 import com.example.claritus.claritus.model.AuthorizeResponse;
 import com.example.claritus.claritus.model.Resource;
 import com.example.claritus.claritus.utils.AppExecutors;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -24,14 +27,17 @@ import timber.log.Timber;
 @Singleton
 public class MiscRepository {
     private final ClaritusService claritusService;
+
     private final AppExecutors appExecutors;
     private final SharedPreferences sharedPreferences;
+    private final Gson gson;
 
     @Inject
-    MiscRepository(AppExecutors appExecutors, ClaritusService claritusService,SharedPreferences sharedPreferences) {
+    MiscRepository(AppExecutors appExecutors, ClaritusService claritusService,SharedPreferences sharedPreferences, Gson gson) {
         this.claritusService = claritusService;
         this.appExecutors = appExecutors;
         this.sharedPreferences = sharedPreferences;
+        this.gson = gson;
 //        sharedPreferences.edit().putString("deviceToken","asdsd").apply();
     }
 
@@ -48,16 +54,29 @@ public class MiscRepository {
 
     private LiveData<Resource<String>> fetchTokenFromApi(String deviceId, String deviceToken) {
         MutableLiveData<Resource<String>> tokenMutableLiveData = new MutableLiveData<>();
-        Call<AuthorizeResponse> call= claritusService.getAuthorize(deviceId,"Core123","300001",deviceToken);
-        call.enqueue(new Callback<AuthorizeResponse>() {
+        Call<String> call= claritusService.getAuthorize(deviceId,"Core123","300001",deviceToken);
+        call.enqueue(new Callback<String>() {
+            @SuppressWarnings("ConstantConditions")
             @Override
-            public void onResponse(Call<AuthorizeResponse> call, Response<AuthorizeResponse> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Timber.d("Got a response");
                 if (response.isSuccessful()) {
-                    Timber.d(response.body().toString());
-                    AuthorizeResponse authorizeResponse = response.body();
-                    tokenMutableLiveData.setValue(Resource.success(authorizeResponse.getApiCurrentToken()));
-                    sharedPreferences.edit().putString("deviceToken",authorizeResponse.getData().getAPICURRENTTOKEN()).apply();
+                    Timber.d(response.body());
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body());
+                        if (jsonObject.optString("code").equals("200")) {
+                            AuthorizeResponse authorizeResponse = gson.fromJson(response.body(),AuthorizeResponse.class);
+                            tokenMutableLiveData.setValue(Resource.success(authorizeResponse.getApiCurrentToken()));
+                            sharedPreferences.edit().putString("deviceToken",authorizeResponse.getData().getAPICURRENTTOKEN()).apply();
+                            sharedPreferences.edit().putString("deviceId",deviceId).apply();
+                        } else {
+                            tokenMutableLiveData.setValue(Resource.error(jsonObject.optString("message"),null));
+                        }
+                    } catch (JSONException e) {
+                        tokenMutableLiveData.setValue(Resource.error("unable to parse data",null));
+                        e.printStackTrace();
+                    }
+
                 } else {
                     String message = null;
                     if (response.errorBody() != null) {
@@ -72,10 +91,10 @@ public class MiscRepository {
                     }
                     tokenMutableLiveData.setValue(Resource.error(message,null));
                 }
-
             }
+
             @Override
-            public void onFailure(Call<AuthorizeResponse> call, Throwable t){
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t){
                 Timber.d("Failed response");
                 tokenMutableLiveData.setValue(Resource.error(t.getMessage(),null));
                 //Handle on Failure here
