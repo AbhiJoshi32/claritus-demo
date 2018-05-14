@@ -6,7 +6,9 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.claritus.claritus.model.Resource;
+import com.example.claritus.claritus.model.Status;
 import com.example.claritus.claritus.repository.MiscRepository;
+import com.example.claritus.claritus.repository.UserRepository;
 import com.example.claritus.claritus.utils.AbsentLiveData;
 import com.example.claritus.claritus.utils.Objects;
 
@@ -15,14 +17,16 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 public class SplashViewModel extends ViewModel {
+    private final UserRepository userRepository;
     private LiveData<Resource<String>> authTokenLiveData;
     private final MutableLiveData<AndroidAuth> androidAuthMutableLiveData = new MutableLiveData<>();
 
     @Inject
-    public SplashViewModel(MiscRepository miscRepository) {
+    public SplashViewModel(MiscRepository miscRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
         authTokenLiveData = Transformations.switchMap(androidAuthMutableLiveData,
                 androidAuth -> {
-                    Timber.d("Data changed in andAuth");
+                    Timber.d("AuthorizeData changed in andAuth");
                     if (androidAuthMutableLiveData.getValue() != null
                                 && androidAuthMutableLiveData.getValue().getId() != null
                             && androidAuthMutableLiveData.getValue().getToken() != null) {
@@ -56,5 +60,9 @@ public class SplashViewModel extends ViewModel {
 
     public LiveData<Resource<String>> getAuthTokenLiveData() {
         return authTokenLiveData;
+    }
+
+    public boolean isLoggedIn() {
+        return userRepository.isLoggedIn();
     }
 }

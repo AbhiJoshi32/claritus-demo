@@ -3,7 +3,6 @@ package com.example.claritus.claritus.auth.registration;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.claritus.claritus.R;
-import com.example.claritus.claritus.auth.NavigationController;
-import com.example.claritus.claritus.databinding.FragmentLoginBinding;
+import com.example.claritus.claritus.auth.AuthNavigationController;
 import com.example.claritus.claritus.di.Injectable;
-import com.example.claritus.claritus.main.MainActivity;
+
+import com.example.claritus.claritus.databinding.FragmentRegisterBinding;
 import com.example.claritus.claritus.model.Status;
 import com.example.claritus.claritus.utils.AutoClearedValue;
 
@@ -29,10 +28,11 @@ public class RegistrationFragment extends Fragment implements Injectable {
     ViewModelProvider.Factory viewModelFactory;
 
     @Inject
-    NavigationController navigationController;
-    private AutoClearedValue<FragmentLoginBinding> binding;
+    AuthNavigationController authNavigationController;
+    private AutoClearedValue<FragmentRegisterBinding> binding;
 
     RegistrationViewModel registrationViewModel;
+
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -43,7 +43,7 @@ public class RegistrationFragment extends Fragment implements Injectable {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentLoginBinding dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login,
+        FragmentRegisterBinding dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_register,
                 container, false);
         binding = new AutoClearedValue<>(this,dataBinding);
         return dataBinding.getRoot();
@@ -57,15 +57,13 @@ public class RegistrationFragment extends Fragment implements Injectable {
             Timber.d("Got a res");
             if (token != null) {
                 if (token.status == Status.SUCCESS)
-                    startActivity(new Intent(getContext(), MainActivity.class));
+                    authNavigationController.navigateToVerification();
                 else Timber.d(token.message);
             }
         });
-        binding.get().button.setOnClickListener(view -> {
-            String email = binding.get().emailEdit.getText().toString();
-            String password = binding.get().passEdit.getText().toString();
-            registrationViewModel.setEmail(email);
-            registrationViewModel.setPassword(password);
+        binding.get().setViewModel(registrationViewModel);
+        binding.get().registerButton.setOnClickListener(view -> {
+            registrationViewModel.onRegisterBtnClicked();
         });
     }
 }

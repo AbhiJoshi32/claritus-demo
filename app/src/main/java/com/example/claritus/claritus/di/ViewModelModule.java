@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.example.claritus.claritus.auth.login.LoginViewModel;
+import com.example.claritus.claritus.auth.registration.RegistrationViewModel;
 import com.example.claritus.claritus.splash.SplashViewModel;
 import com.example.claritus.claritus.viewmodel.ClaritusViewModelFactory;
 
@@ -22,6 +23,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SplashViewModel.class)
     abstract ViewModel bindSplashViewModel(SplashViewModel splashViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RegistrationViewModel.class)
+    abstract ViewModel bindRegistrationViewModel(RegistrationViewModel registrationViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(ClaritusViewModelFactory factory);

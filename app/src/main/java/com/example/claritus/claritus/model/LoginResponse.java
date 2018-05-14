@@ -10,7 +10,7 @@ public class LoginResponse {
     @SerializedName("code")
     private Long Code;
     @SerializedName("data")
-    private com.example.claritus.claritus.model.Data Data;
+    private AuthorizeData AuthorizeData;
     @SerializedName("message")
     private String Message;
     @SerializedName("reason")
@@ -34,12 +34,12 @@ public class LoginResponse {
         Code = code;
     }
 
-    public com.example.claritus.claritus.model.Data getData() {
-        return Data;
+    public AuthorizeData getAuthorizeData() {
+        return AuthorizeData;
     }
 
-    public void setData(com.example.claritus.claritus.model.Data data) {
-        Data = data;
+    public void setAuthorizeData(AuthorizeData authorizeData) {
+        AuthorizeData = authorizeData;
     }
 
     public String getMessage() {

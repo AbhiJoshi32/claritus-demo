@@ -12,8 +12,10 @@ import android.os.Bundle;
 
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.auth.AuthActivity;
+import com.example.claritus.claritus.main.MainActivity;
 import com.example.claritus.claritus.model.Resource;
 import com.example.claritus.claritus.model.Status;
+import com.example.claritus.claritus.repository.UserRepository;
 
 import javax.inject.Inject;
 
@@ -38,9 +40,19 @@ public class SplashActivity extends AppCompatActivity{
             if (stringResource != null) {
                 Timber.d(stringResource.data);
                 if (stringResource.status==Status.SUCCESS) {
-                    Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    if (splashViewModel.isLoggedIn()) {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        this.overridePendingTransition(0, 0);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        this.overridePendingTransition(0, 0);
+                        finish();
+                    }
                 }
             }
             else Timber.d("null");

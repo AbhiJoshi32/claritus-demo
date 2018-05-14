@@ -3,17 +3,18 @@ package com.example.claritus.claritus.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Data {
+@SuppressWarnings("unused")
+public class AuthorizeData {
 
     @SerializedName("API_CURRENT_TOKEN")
-    private String mAPICURRENTTOKEN;
+    private String APICURRENTTOKEN;
 
     public String getAPICURRENTTOKEN() {
-        return mAPICURRENTTOKEN;
+        return APICURRENTTOKEN;
     }
 
     public void setAPICURRENTTOKEN(String APICURRENTTOKEN) {
-        mAPICURRENTTOKEN = APICURRENTTOKEN;
+        this.APICURRENTTOKEN = APICURRENTTOKEN;
     }
 
 }

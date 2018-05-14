@@ -67,7 +67,7 @@ public class MiscRepository {
                         if (jsonObject.optString("code").equals("200")) {
                             AuthorizeResponse authorizeResponse = gson.fromJson(response.body(),AuthorizeResponse.class);
                             tokenMutableLiveData.setValue(Resource.success(authorizeResponse.getApiCurrentToken()));
-                            sharedPreferences.edit().putString("deviceToken",authorizeResponse.getData().getAPICURRENTTOKEN()).apply();
+                            sharedPreferences.edit().putString("deviceToken",authorizeResponse.getAuthorizeData().getAPICURRENTTOKEN()).apply();
                             sharedPreferences.edit().putString("deviceId",deviceId).apply();
                         } else {
                             tokenMutableLiveData.setValue(Resource.error(jsonObject.optString("message"),null));

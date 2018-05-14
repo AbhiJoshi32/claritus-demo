@@ -20,7 +20,7 @@ package com.example.claritus.claritus.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-import com.example.claritus.claritus.model.User;
+import com.example.claritus.claritus.model.user.User;
 
 
 /**

@@ -20,15 +20,17 @@ import android.support.v4.app.FragmentManager;
 
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.auth.login.LoginFragment;
+import com.example.claritus.claritus.auth.registration.RegistrationFragment;
+import com.example.claritus.claritus.auth.verification.VerificationFragment;
 
 import javax.inject.Inject;
 
 
-public class NavigationController {
+public class AuthNavigationController {
     private final int containerId;
     private final FragmentManager fragmentManager;
     @Inject
-    public NavigationController(AuthActivity authActivity) {
+    public AuthNavigationController(AuthActivity authActivity) {
         this.containerId = R.id.authContainer;
         this.fragmentManager = authActivity.getSupportFragmentManager();
     }
@@ -37,6 +39,20 @@ public class NavigationController {
         LoginFragment loginFragment = new LoginFragment();
         fragmentManager.beginTransaction()
                 .replace(containerId, loginFragment)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToRegistration() {
+        RegistrationFragment registrationFragment = new RegistrationFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, registrationFragment)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToVerification() {
+        VerificationFragment verificationFragment = new VerificationFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId, verificationFragment)
                 .commitAllowingStateLoss();
     }
 

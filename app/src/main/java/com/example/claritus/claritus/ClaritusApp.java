@@ -19,6 +19,7 @@ public class ClaritusApp extends Application implements HasActivityInjector {
     @Override
     public void onCreate() {
         super.onCreate();
+//        FirebaseApp.initializeApp(this);
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }

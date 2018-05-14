@@ -6,4 +6,7 @@
     <string name="logo_desc">logo</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="email_error">Invalid Email</string>
+    <string name="password_error">Invalid Password</string>
 </resources>

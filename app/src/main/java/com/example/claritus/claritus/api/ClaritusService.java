@@ -16,13 +16,6 @@
 
 package com.example.claritus.claritus.api;
 
-import android.arch.lifecycle.LiveData;
-
-
-import com.example.claritus.claritus.model.AuthorizeResponse;
-import com.example.claritus.claritus.model.LoginResponse;
-import com.example.claritus.claritus.model.User;
-
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -49,10 +42,16 @@ public interface ClaritusService {
     @POST("user/Api/v1/user/create")
     Call<String> registerUser(@Header("AuthorizedToken") String authToken,
                               @Header("DeviceId") String deviceId,
-                              @Field("username") String email,
-                              @Field("password") String password, String lastName,
+                              @Field("password") String password,
+                              @Field("email") String email,
+                              @Field("last_name") String lastName,
                               @Field("first_name") String firstName,
                               @Field("phone") String phone,
                               @Field("user_type") String userType,
                               @Field("role") String role);
+
+    @FormUrlEncoded
+    @POST("user/Api/v1/user/view")
+    Call<String> getUser(@Header("AuthorizedToken") String authToken,
+                         @Header("DeviceId") String deviceId);
 }

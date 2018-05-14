@@ -4,14 +4,14 @@ package com.example.claritus.claritus.model;
 import com.google.gson.annotations.SerializedName;
 
 @SuppressWarnings("unused")
-public class AuthorizeResponse {
+public class RegisterResponse {
 
     @SerializedName("api_current_token")
     private String ApiCurrentToken;
     @SerializedName("code")
     private Long Code;
     @SerializedName("data")
-    private AuthorizeData AuthorizeData;
+    private RegisterData RegisterData;
     @SerializedName("message")
     private String Message;
     @SerializedName("reason")
@@ -35,12 +35,12 @@ public class AuthorizeResponse {
         Code = code;
     }
 
-    public AuthorizeData getAuthorizeData() {
-        return AuthorizeData;
+    public RegisterData getRegisterData() {
+        return RegisterData;
     }
 
-    public void setAuthorizeData(AuthorizeData authorizeData) {
-        AuthorizeData = authorizeData;
+    public void setRegisterData(RegisterData registerData) {
+        RegisterData = registerData;
     }
 
     public String getMessage() {

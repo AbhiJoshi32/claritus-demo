@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.claritus.claritus.R;
-import com.example.claritus.claritus.auth.NavigationController;
+import com.example.claritus.claritus.auth.AuthNavigationController;
 import com.example.claritus.claritus.databinding.FragmentLoginBinding;
 import com.example.claritus.claritus.di.Injectable;
 import com.example.claritus.claritus.main.MainActivity;
@@ -28,7 +28,7 @@ public class LoginFragment extends Fragment implements Injectable {
     ViewModelProvider.Factory viewModelFactory;
 
     @Inject
-    NavigationController navigationController;
+    AuthNavigationController authNavigationController;
     private AutoClearedValue<FragmentLoginBinding> binding;
 
     LoginViewModel loginViewModel;
@@ -56,8 +56,24 @@ public class LoginFragment extends Fragment implements Injectable {
             Timber.d("Got a res");
             if (token != null) {
                 if (token.status == Status.SUCCESS)
+                    Timber.d(token.data);
+                else {
+                    Timber.d(token.message);
+                    if (token.message.equals("not verified")) {
+                        authNavigationController.navigateToVerification();
+                    }
+                }
+            }
+        });
+
+        loginViewModel.getUser().observe(this,userResource -> {
+            Timber.d("Got a res for user");
+            if (userResource != null) {
+                if (userResource.status == Status.SUCCESS)
                     startActivity(new Intent(getContext(), MainActivity.class));
-                else Timber.d(token.message);
+                else {
+                    Timber.d(userResource.message);
+                }
             }
         });
         binding.get().button.setOnClickListener(view -> {
@@ -65,6 +81,9 @@ public class LoginFragment extends Fragment implements Injectable {
             String password = binding.get().passEdit.getText().toString();
             loginViewModel.setEmail(email);
             loginViewModel.setPassword(password);
+        });
+        binding.get().registerText.setOnClickListener(view -> {
+            authNavigationController.navigateToRegistration();
         });
     }
 }

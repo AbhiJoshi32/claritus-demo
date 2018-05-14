@@ -6,6 +6,7 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.claritus.claritus.model.Resource;
+import com.example.claritus.claritus.model.user.User;
 import com.example.claritus.claritus.repository.UserRepository;
 import com.example.claritus.claritus.utils.AbsentLiveData;
 
@@ -16,9 +17,15 @@ import timber.log.Timber;
 public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginData> loginLiveData = new MutableLiveData<>();
     private LiveData<Resource<String>> token;
+    private LiveData<Resource<User>> user;
 
     @Inject
     LoginViewModel(UserRepository userRepository) {
+        user = Transformations.switchMap(token,tokenData->{
+            if (tokenData!=null) {
+                return userRepository.loadUser();
+            } else return AbsentLiveData.create();
+        });
         token = Transformations.switchMap(loginLiveData,loginData->{
             if (loginData != null
                     && loginData.getEmail()!=null
@@ -49,5 +56,9 @@ public class LoginViewModel extends ViewModel {
 
     public LiveData<Resource<String>> getToken() {
         return token;
+    }
+
+    public LiveData<Resource<User>> getUser() {
+        return user;
     }
 }

@@ -22,7 +22,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.example.claritus.claritus.model.User;
+import com.example.claritus.claritus.model.user.User;
 
 /**
  * Interface for database access for User related operations.
@@ -32,6 +32,6 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User user);
 
-    @Query("SELECT * FROM user WHERE username = :username")
-    LiveData<User> findByUsername(String username);
+    @Query("SELECT * FROM user where email = :email")
+    LiveData<User> findByEmail(String email);
 }

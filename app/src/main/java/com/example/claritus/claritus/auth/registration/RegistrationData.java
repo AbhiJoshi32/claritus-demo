@@ -46,4 +46,12 @@ public class RegistrationData {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public RegistrationData(String email, String password, String phone, String firstName, String lastName) {
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
