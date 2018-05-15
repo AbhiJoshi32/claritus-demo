@@ -42,7 +42,7 @@ class AppModule {
 
     @Singleton @Provides
     ClaritusDb provideDb(Application app) {
-        return Room.databaseBuilder(app, ClaritusDb.class,"github.db").build();
+        return Room.databaseBuilder(app, ClaritusDb.class,"github.db").allowMainThreadQueries().build();
     }
 
     @Singleton @Provides

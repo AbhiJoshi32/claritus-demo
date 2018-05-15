@@ -6,6 +6,7 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.claritus.claritus.model.Resource;
+import com.example.claritus.claritus.model.Status;
 import com.example.claritus.claritus.model.user.User;
 import com.example.claritus.claritus.repository.UserRepository;
 import com.example.claritus.claritus.utils.AbsentLiveData;
@@ -21,17 +22,17 @@ public class LoginViewModel extends ViewModel {
 
     @Inject
     LoginViewModel(UserRepository userRepository) {
-        user = Transformations.switchMap(token,tokenData->{
-            if (tokenData!=null) {
-                return userRepository.loadUser();
-            } else return AbsentLiveData.create();
-        });
         token = Transformations.switchMap(loginLiveData,loginData->{
             if (loginData != null
                     && loginData.getEmail()!=null
                     && loginData.getPassword() != null)
                 return userRepository.loginUser(loginData);
             else return AbsentLiveData.create();
+        });
+        user = Transformations.switchMap(token,tokenData->{
+            if (tokenData!=null && tokenData.status== Status.SUCCESS) {
+                return userRepository.loadUser();
+            } else return AbsentLiveData.create();
         });
     }
     public void setEmail(String email) {

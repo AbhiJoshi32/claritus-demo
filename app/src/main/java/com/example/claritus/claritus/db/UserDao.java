@@ -31,7 +31,8 @@ import com.example.claritus.claritus.model.user.User;
 public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User user);
-
     @Query("SELECT * FROM user where email = :email")
     LiveData<User> findByEmail(String email);
+    @Query("SELECT * FROM user where email = :email")
+    User findByEmailSync(String email);
 }

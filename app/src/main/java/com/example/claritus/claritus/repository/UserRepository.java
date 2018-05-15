@@ -60,16 +60,23 @@ public class UserRepository {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body());
-                        if (jsonObject.optString("code").equals("200")) {
-                            LoginResponse loginResponse = gson.fromJson(response.body(), LoginResponse.class);
-                            loginLiveData.setValue(Resource.success(loginResponse.getMessage()));
-                            sharedPreferences.edit().putBoolean("isLoggedIn",true).apply();
-                            sharedPreferences.edit().putString("deviceToken",loginResponse.getApiCurrentToken()).apply();
-                            sharedPreferences.edit().putString("email",loginData.getEmail()).apply();
-                        } else if(jsonObject.optString("code").equals("100")) {
-                            loginLiveData.setValue(Resource.error("not verified",null));
-                        } else {
-                            loginLiveData.setValue(Resource.error(jsonObject.optString("message"),null));
+                        String code = jsonObject.optString("code");
+                        switch (jsonObject.optString("code")) {
+                            case "200":
+                                LoginResponse loginResponse = gson.fromJson(response.body(), LoginResponse.class);
+                                String newToken = loginResponse.getApiCurrentToken();
+                                sharedPreferences.edit().putString("deviceToken", newToken).commit();
+                                sharedPreferences.edit().putBoolean("isLoggedIn", true).apply();
+                                Timber.d(sharedPreferences.getString("deviceToken",""));
+                                sharedPreferences.edit().putString("email", loginData.getEmail()).apply();
+                                loginLiveData.setValue(Resource.success(loginResponse.getMessage()));
+                                break;
+                            case "100":
+                                loginLiveData.setValue(Resource.error("not verified", null));
+                                break;
+                            default:
+                                loginLiveData.setValue(Resource.error(jsonObject.optString("message"), null));
+                                break;
                         }
                     } catch (JSONException e) {
                         loginLiveData.setValue(Resource.error("unable to parse data", null));
@@ -119,11 +126,12 @@ public class UserRepository {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body());
-                        sharedPreferences.edit().putString("deviceToken",jsonObject.optString("api_current_token")).apply();
+                        Timber.d(jsonObject.optString("api_current_token"));
+                        String newToken = jsonObject.optString("api_current_token");
+                        sharedPreferences.edit().putString("deviceToken",newToken).apply();
                         if (jsonObject.optString("code").equals("200")) {
                             RegisterResponse registerResponse = gson.fromJson(response.body(), RegisterResponse.class);
                             registerLiveData.setValue(Resource.success(registerResponse.getMessage()));
-                            sharedPreferences.edit()    .putBoolean("isLoggedIn",true).apply();
                             sharedPreferences.edit().putString("email",registrationData.getEmail()).apply();
                         } else {
                             registerLiveData.setValue(Resource.error(jsonObject.optString("message"),null));
@@ -169,12 +177,15 @@ public class UserRepository {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body());
-                        sharedPreferences.edit().putString("deviceToken",jsonObject.optString("api_current_token")).apply();
+                        sharedPreferences.edit().putString("deviceToken",jsonObject.optString("api_current_token")).commit();
                         if (jsonObject.optString("code").equals("200")) {
                             UserResponse userResponse = gson.fromJson(response.body(), UserResponse.class);
                             User user = userResponse.getData();
                             user.setUid("1");
-                            userDao.insert(user);
+                            appExecutors.diskIO().execute(() -> {
+                                userDao.insert(user);
+                                sharedPreferences.edit().putBoolean("isLoggedIn", true).apply();
+                            });
                             userLiveData.setValue(Resource.success(user));
                         } else {
                             userLiveData.setValue(Resource.error(jsonObject.optString("message"),null));

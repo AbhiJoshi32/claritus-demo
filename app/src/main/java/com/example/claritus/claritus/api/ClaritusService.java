@@ -50,8 +50,7 @@ public interface ClaritusService {
                               @Field("user_type") String userType,
                               @Field("role") String role);
 
-    @FormUrlEncoded
-    @POST("user/Api/v1/user/view")
+    @GET("user/Api/v1/user/view")
     Call<String> getUser(@Header("AuthorizedToken") String authToken,
                          @Header("DeviceId") String deviceId);
 }

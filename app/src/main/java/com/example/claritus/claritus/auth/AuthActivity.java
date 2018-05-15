@@ -1,14 +1,10 @@
 package com.example.claritus.claritus.auth;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.claritus.claritus.R;
-import com.example.claritus.claritus.main.MainActivity;
-import com.example.claritus.claritus.repository.UserRepository;
-
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;

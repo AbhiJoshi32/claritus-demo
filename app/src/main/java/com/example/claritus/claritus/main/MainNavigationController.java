@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.main.FirebaseSync.FirebaseSyncFragment;
+import com.example.claritus.claritus.main.UserList.UserListFragment;
 
 import javax.inject.Inject;
 
@@ -24,5 +25,13 @@ public class MainNavigationController {
     }
 
     public void navigateToList() {
+        UserListFragment userListFragment = new UserListFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId,userListFragment)
+                .commitAllowingStateLoss();
+    }
+
+    public void navigateToChat(String uid) {
+
     }
 }
