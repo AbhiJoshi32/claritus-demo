@@ -81,6 +81,10 @@ public class FirebaseSyncFragment extends Fragment implements Injectable{
                                                 user.setUid(fuser.getUid());
                                                 appExecutors.diskIO().execute(()->{userDao.insert(user);});
                                                 database.getReference().child("Users").child(fuser.getUid()).setValue(user);
+                                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                                                userRef.keepSynced(true);
+                                                DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference("Messages").child(fuser.getUid());
+                                                msgRef.keepSynced(true);
                                                 navigationController.navigateToList();
                                             } else {
                                                 binding.get().firebaseStatus.setText("Some error occured");

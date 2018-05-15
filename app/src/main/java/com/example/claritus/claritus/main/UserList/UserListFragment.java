@@ -30,11 +30,11 @@ import timber.log.Timber;
 
 
 public class UserListFragment extends Fragment implements Injectable {
-    RecyclerView recyclerView;
-    UserAdapter userAdapter;
-    List<User> users = new ArrayList<>();
-    FirebaseDatabase database;
-    FirebaseAuth auth;
+    private RecyclerView recyclerView;
+    private UserAdapter userAdapter;
+    private List<User> users = new ArrayList<>();
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
     @Inject
     MainNavigationController mainNavigationController;
 
@@ -54,7 +54,7 @@ public class UserListFragment extends Fragment implements Injectable {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         userAdapter = new UserAdapter(getContext(),users, position -> {
-            mainNavigationController.navigateToChat(users.get(position).getUid());
+            mainNavigationController.navigateToChat(users.get(position).getUid(),users.get(position).getFirstName());
         });
         recyclerView.setAdapter(userAdapter);
     }

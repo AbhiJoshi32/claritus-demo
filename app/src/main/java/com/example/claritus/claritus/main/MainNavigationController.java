@@ -1,8 +1,10 @@
 package com.example.claritus.claritus.main;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.example.claritus.claritus.R;
+import com.example.claritus.claritus.main.Chat.ChatFragment;
 import com.example.claritus.claritus.main.FirebaseSync.FirebaseSyncFragment;
 import com.example.claritus.claritus.main.UserList.UserListFragment;
 
@@ -20,7 +22,7 @@ public class MainNavigationController {
     public void navigateToSync() {
         FirebaseSyncFragment firebaseSyncFragment = new FirebaseSyncFragment();
         fragmentManager.beginTransaction()
-                .replace(containerId, firebaseSyncFragment)
+                .add(containerId, firebaseSyncFragment)
                 .commitAllowingStateLoss();
     }
 
@@ -31,7 +33,15 @@ public class MainNavigationController {
                 .commitAllowingStateLoss();
     }
 
-    public void navigateToChat(String uid) {
-
+    public void navigateToChat(String uid, String firstName) {
+        ChatFragment chatFragment = new ChatFragment();
+        Bundle args = new Bundle();
+        args.putString("uid", uid);
+        args.putString("name",firstName);
+        chatFragment.setArguments(args);
+        fragmentManager.beginTransaction()
+                .replace(containerId,chatFragment)
+                .addToBackStack("chatFragment")
+                .commitAllowingStateLoss();
     }
 }

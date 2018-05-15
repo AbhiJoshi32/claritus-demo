@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.example.claritus.claritus.di.AppInjector;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 
@@ -25,6 +26,7 @@ public class ClaritusApp extends Application implements HasActivityInjector {
             Timber.plant(new Timber.DebugTree());
         }
         AppInjector.init(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.claritus.claritus.di;
 
+import com.example.claritus.claritus.main.Chat.ChatFragment;
 import com.example.claritus.claritus.main.FirebaseSync.FirebaseSyncFragment;
 import com.example.claritus.claritus.main.UserList.UserListFragment;
 
@@ -12,4 +13,6 @@ public abstract class MainFragmentBuilderModule {
     abstract FirebaseSyncFragment contributeSyncFragment();
     @ContributesAndroidInjector
     abstract UserListFragment contributeUserListFragment();
+    @ContributesAndroidInjector
+    abstract ChatFragment contributeChatFragment();
 }
