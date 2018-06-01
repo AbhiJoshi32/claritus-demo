@@ -4,6 +4,8 @@ package com.example.claritus.claritus.main.UserList;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,11 +52,13 @@ public class UserListFragment extends Fragment implements Injectable {
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle("Friends");
         recyclerView = view.findViewById(R.id.userListRecycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
         userAdapter = new UserAdapter(getContext(),users, position -> {
-            mainNavigationController.navigateToChat(users.get(position).getUid(),users.get(position).getFirstName());
+            mainNavigationController.navigateToChat(users.get(position).getUid(),users.get(position).getEmail());
         });
         recyclerView.setAdapter(userAdapter);
     }

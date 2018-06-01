@@ -2,11 +2,13 @@ package com.example.claritus.claritus.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.claritus.claritus.api.ClaritusService;
+import com.example.claritus.claritus.auth.AuthActivity;
 import com.example.claritus.claritus.auth.login.LoginData;
 import com.example.claritus.claritus.auth.registration.RegistrationData;
 import com.example.claritus.claritus.db.UserDao;
@@ -218,8 +220,23 @@ public class UserRepository {
         return userLiveData;
     }
 
+    public LiveData<User> getUser(String email) {
+        return userDao.findByEmail(email);
+    }
+
     public boolean isLoggedIn() {
         return sharedPreferences.getBoolean("isLoggedIn",false);
+    }
+
+    public void saveUser(User user) {
+        appExecutors.diskIO().execute(() -> {
+            userDao.insert(user);
+            sharedPreferences.edit().putBoolean("isLoggedIn", true).apply();
+        });
+    }
+
+    public void logout() {
+        sharedPreferences.edit().putBoolean("isLoggedIn",false).apply();
     }
 
 //    public LiveData<Resource<User>> loadUser() {

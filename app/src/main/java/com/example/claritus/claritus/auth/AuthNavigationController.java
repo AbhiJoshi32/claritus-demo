@@ -24,11 +24,13 @@ import com.example.claritus.claritus.auth.registration.RegistrationFragment;
 import com.example.claritus.claritus.auth.verification.VerificationFragment;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 public class AuthNavigationController {
     private final int containerId;
     private final FragmentManager fragmentManager;
+
     @Inject
     public AuthNavigationController(AuthActivity authActivity) {
         this.containerId = R.id.authContainer;

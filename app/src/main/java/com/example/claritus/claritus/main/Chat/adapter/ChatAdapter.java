@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.main.Chat.ChatModal;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,19 +21,19 @@ import java.util.Locale;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder>{
     private List<ChatModal> chatMsg= new ArrayList<>();
     private Context context;
+    String email;
 
-    public ChatAdapter(Context context, List<ChatModal> chatMsg) {
+    public ChatAdapter(Context context, List<ChatModal> chatMsg,String email) {
         this.context = context;
         this.chatMsg = chatMsg;
+        this.email = email;
     }
 
     class ChatViewHolder extends RecyclerView.ViewHolder {
-        TextView sender;
         TextView msg;
         TextView time;
         ChatViewHolder(View itemView) {
             super(itemView);
-            sender = itemView.findViewById(R.id.sender);
             msg = itemView.findViewById(R.id.msgText);
             time = itemView.findViewById(R.id.msgTime);
         }
@@ -45,13 +46,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @NonNull
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chat_card, viewGroup, false);
+        View v;
+        if (chatMsg.get(i).getSender().equals(email))
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.right_chat_bubble, viewGroup, false);
+        else v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.left_chat_bubble, viewGroup, false);
         return new ChatViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ChatViewHolder itemViewHolder, int i) {
-        itemViewHolder.sender.setText(chatMsg.get(i).getSender());
         itemViewHolder.msg.setText(chatMsg.get(i).getText());
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(Long.parseLong(chatMsg.get(i).getTime()));
@@ -60,7 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 }

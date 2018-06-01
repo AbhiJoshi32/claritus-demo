@@ -24,7 +24,7 @@ public class LoginViewModel extends ViewModel {
     LoginViewModel(UserRepository userRepository) {
         token = Transformations.switchMap(loginLiveData,loginData->{
             if (loginData != null
-                    && loginData.getEmail()!=null
+                    && loginData.getEmail()!= null
                     && loginData.getPassword() != null)
                 return userRepository.loginUser(loginData);
             else return AbsentLiveData.create();

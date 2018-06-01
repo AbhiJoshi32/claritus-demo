@@ -33,11 +33,11 @@ public class MainNavigationController {
                 .commitAllowingStateLoss();
     }
 
-    public void navigateToChat(String uid, String firstName) {
+    public void navigateToChat(String uid, String email) {
         ChatFragment chatFragment = new ChatFragment();
         Bundle args = new Bundle();
         args.putString("uid", uid);
-        args.putString("name",firstName);
+        args.putString("email",email);
         chatFragment.setArguments(args);
         fragmentManager.beginTransaction()
                 .replace(containerId,chatFragment)

@@ -94,8 +94,16 @@ public class FirebaseSyncFragment extends Fragment implements Injectable{
                             } else {
                                 logout();
                             }
-                        } else navigationController.navigateToList();
-
+                        } else {
+                            firebaseAuth.signInWithEmailAndPassword(email,"pass@123").addOnCompleteListener(getActivity(),task->{
+                                binding.get().progressBar2.setVisibility(View.GONE);
+                                if (task.isSuccessful()) {
+                                    navigationController.navigateToList();
+                                } else {
+                                    Timber.d("Cant login with firebase");
+                                }
+                            });
+                        }
                     });
         } else {
             logout();
@@ -106,6 +114,5 @@ public class FirebaseSyncFragment extends Fragment implements Injectable{
         Timber.d("User not properly signedIn");
         sharedPreferences.edit().putBoolean("isLoggedIn",false).apply();
         startActivity(new Intent(getActivity(), AuthActivity.class));
-
     }
 }

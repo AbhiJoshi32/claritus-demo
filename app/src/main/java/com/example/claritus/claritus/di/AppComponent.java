@@ -12,9 +12,9 @@ import dagger.android.AndroidInjectionModule;
 
 @Singleton
 @Component(modules = {
+        ActivityBuilderModule.class,
         AndroidInjectionModule.class,
-        AppModule.class,
-        ActivityBuilderModule.class
+        AppModule.class
 })
 public interface AppComponent {
     @Component.Builder

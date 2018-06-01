@@ -21,7 +21,6 @@ public class AuthActivity extends AppCompatActivity implements HasSupportFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         AndroidInjection.inject(this);
-
         if (savedInstanceState == null) {
             authNavigationController.navigateToLogin();
         }

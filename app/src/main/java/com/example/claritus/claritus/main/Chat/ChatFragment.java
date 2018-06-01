@@ -1,8 +1,7 @@
 package com.example.claritus.claritus.main.Chat;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.di.Injectable;
 import com.example.claritus.claritus.main.Chat.adapter.ChatAdapter;
 import com.example.claritus.claritus.main.MainNavigationController;
-import com.example.claritus.claritus.model.user.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,39 +29,41 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 
 public class ChatFragment extends Fragment implements Injectable {
     private RecyclerView recyclerView;
-    private Button button;
+    private ImageButton button;
     private ChatAdapter chatAdapter;
     private List<ChatModal> chatMsgs = new ArrayList<>();
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private EditText msg;
     private String uid;
-    private String fname;
+    private String remail;
     @Inject
     MainNavigationController mainNavigationController;
-
     public ChatFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        assert getArguments() != null;
         uid = getArguments().getString("uid");
-        fname = getArguments().getString("name");
+        remail = getArguments().getString("email");
+
+        getActivity().setTitle(remail);
+
         recyclerView = view.findViewById(R.id.chatRecycler);
         button = view.findViewById(R.id.sendBtn);
         msg = view.findViewById(R.id.msgInput);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        chatAdapter = new ChatAdapter(getContext(), chatMsgs);
-        recyclerView.setAdapter(chatAdapter);
+
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
+        chatAdapter = new ChatAdapter(getContext(), chatMsgs,auth.getCurrentUser().getEmail());
+        recyclerView.setAdapter(chatAdapter);
         DatabaseReference msgRef = database.getReference().child("Messages").
                 child(auth.getCurrentUser().getUid());
         DatabaseReference fmsgRef = database.getReference().child("Messages").
@@ -79,6 +80,7 @@ public class ChatFragment extends Fragment implements Injectable {
                         chatMsgs.clear();
                         chatMsgs.addAll(chatModals);
                         chatAdapter.notifyDataSetChanged();
+                        recyclerView.scrollToPosition(chatModals.size());
                     }
 
                     @Override
@@ -94,11 +96,13 @@ public class ChatFragment extends Fragment implements Injectable {
                 String ts = tsLong.toString();
                 ChatModal chatModal = new ChatModal(key,
                         msg.getText().toString(),
-                        fname,
-                        auth.getCurrentUser().getUid(),ts);
+                        auth.getCurrentUser().getEmail(),
+                        remail, ts);
                 msgRef.child(key).setValue(chatModal);
                 fmsgRef.child(key).setValue(chatModal);
             }
+            msg.setText("");
+            msg.clearFocus();
         });
     }
 

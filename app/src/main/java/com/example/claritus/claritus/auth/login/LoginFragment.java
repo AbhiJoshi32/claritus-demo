@@ -69,8 +69,11 @@ public class LoginFragment extends Fragment implements Injectable {
         loginViewModel.getUser().observe(this,userResource -> {
             Timber.d("Got a res for user");
             if (userResource != null) {
-                if (userResource.status == Status.SUCCESS)
-                    startActivity(new Intent(getContext(), MainActivity.class));
+                if (userResource.status == Status.SUCCESS) {
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent);
+                }
                 else {
                     Timber.d(userResource.message);
                 }
