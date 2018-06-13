@@ -6,7 +6,6 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 
 import com.example.claritus.claritus.model.Resource;
-import com.example.claritus.claritus.model.Status;
 import com.example.claritus.claritus.repository.MiscRepository;
 import com.example.claritus.claritus.repository.UserRepository;
 import com.example.claritus.claritus.utils.AbsentLiveData;
@@ -16,13 +15,14 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+@SuppressWarnings("SameParameterValue")
 public class SplashViewModel extends ViewModel {
     private final UserRepository userRepository;
     private LiveData<Resource<String>> authTokenLiveData;
     private final MutableLiveData<AndroidAuth> androidAuthMutableLiveData = new MutableLiveData<>();
 
     @Inject
-    public SplashViewModel(MiscRepository miscRepository, UserRepository userRepository) {
+    SplashViewModel(MiscRepository miscRepository, UserRepository userRepository) {
         this.userRepository = userRepository;
         authTokenLiveData = Transformations.switchMap(androidAuthMutableLiveData,
                 androidAuth -> {
@@ -38,7 +38,7 @@ public class SplashViewModel extends ViewModel {
                 });
     }
 
-    public void setToken(String token) {
+    void setToken(String token) {
         AndroidAuth androidAuth = new AndroidAuth();
         if (androidAuthMutableLiveData.getValue() != null)
             androidAuth = androidAuthMutableLiveData.getValue();
@@ -48,7 +48,7 @@ public class SplashViewModel extends ViewModel {
         this.androidAuthMutableLiveData.setValue(androidAuth);
     }
 
-    public void setAndroidIdLiveData(String androidId) {
+    void setAndroidIdLiveData(String androidId) {
         AndroidAuth androidAuth = new AndroidAuth();
         if (androidAuthMutableLiveData.getValue() != null)
             androidAuth = androidAuthMutableLiveData.getValue();
@@ -58,11 +58,11 @@ public class SplashViewModel extends ViewModel {
         this.androidAuthMutableLiveData.setValue(androidAuth);
     }
 
-    public LiveData<Resource<String>> getAuthTokenLiveData() {
+    LiveData<Resource<String>> getAuthTokenLiveData() {
         return authTokenLiveData;
     }
 
-    public boolean isLoggedIn() {
+    boolean isLoggedIn() {
         return userRepository.isLoggedIn();
     }
 }

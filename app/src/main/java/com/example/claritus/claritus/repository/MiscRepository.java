@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import com.example.claritus.claritus.api.ClaritusService;
 import com.example.claritus.claritus.model.AuthorizeResponse;
 import com.example.claritus.claritus.model.Resource;
-import com.example.claritus.claritus.utils.AppExecutors;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -28,14 +27,12 @@ import timber.log.Timber;
 public class MiscRepository {
     private final ClaritusService claritusService;
 
-    private final AppExecutors appExecutors;
     private final SharedPreferences sharedPreferences;
     private final Gson gson;
 
     @Inject
-    MiscRepository(AppExecutors appExecutors, ClaritusService claritusService,SharedPreferences sharedPreferences, Gson gson) {
+    MiscRepository(ClaritusService claritusService,SharedPreferences sharedPreferences, Gson gson) {
         this.claritusService = claritusService;
-        this.appExecutors = appExecutors;
         this.sharedPreferences = sharedPreferences;
         this.gson = gson;
 //        sharedPreferences.edit().putString("deviceToken","asdsd").apply();
@@ -82,8 +79,8 @@ public class MiscRepository {
                     if (response.errorBody() != null) {
                         try {
                             message = response.errorBody().string();
-                        } catch (IOException ignored) {
-                            Timber.e(ignored, "error while parsing response");
+                        } catch (IOException e) {
+                            Timber.e(e, "error while parsing response");
                         }
                     }
                     if (message == null || message.trim().length() == 0) {

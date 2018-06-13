@@ -1,5 +1,6 @@
 package com.example.claritus.claritus.main;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     @Inject
     MainNavigationController navigationController;
+    @Inject
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +31,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         AndroidInjection.inject(this);
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        navigationController.navigateToSync();
+        if (savedInstanceState == null) {
+            if (!sharedPreferences.getBoolean("firebaseSync", false))
+                navigationController.navigateToSync();
+            else
+                navigationController.navigateToList();
+        }
     }
 
     @Override
@@ -38,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return true;
     }
@@ -46,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.profile) {
-            //TODO open profile fragment
+            navigationController.navigateToProfile();
         }
-        return true;
+        return false;
     }
 }

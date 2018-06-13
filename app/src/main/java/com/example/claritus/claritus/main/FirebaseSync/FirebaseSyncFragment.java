@@ -26,6 +26,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import timber.log.Timber;
@@ -49,7 +51,7 @@ public class FirebaseSyncFragment extends Fragment implements Injectable{
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         firebaseAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
@@ -60,50 +62,59 @@ public class FirebaseSyncFragment extends Fragment implements Injectable{
         return dataBinding.getRoot();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         binding.get().firebaseStatus.setText(R.string.firebase_config);
         String email = sharedPreferences.getString("email","");
-
         if (!email.equals("")) {
             firebaseAuth.fetchProvidersForEmail(email)
                     .addOnCompleteListener(task1 -> {
-                        boolean check = task1.getResult().getProviders().isEmpty();
-                        if (check) {
-                            User user = userDao.findByEmailSync(email);
-                            if (user != null) {
-                                firebaseAuth.createUserWithEmailAndPassword(email, "pass@123")
-                                        .addOnCompleteListener(getActivity(), task -> {
-                                            binding.get().progressBar2.setVisibility(View.GONE);
-                                            if (task.isSuccessful()) {
-                                                FirebaseUser fuser = firebaseAuth.getCurrentUser();
-                                                user.setUid(fuser.getUid());
-                                                appExecutors.diskIO().execute(()->{userDao.insert(user);});
-                                                database.getReference().child("Users").child(fuser.getUid()).setValue(user);
-                                                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
-                                                userRef.keepSynced(true);
-                                                DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference("Messages").child(fuser.getUid());
-                                                msgRef.keepSynced(true);
-                                                navigationController.navigateToList();
-                                            } else {
-                                                binding.get().firebaseStatus.setText("Some error occured");
-                                            }
-                                            // ...
-                                        });
-                            } else {
+                        try {
+                            if (task1.getResult().getProviders() == null) {
                                 logout();
-                            }
-                        } else {
-                            firebaseAuth.signInWithEmailAndPassword(email,"pass@123").addOnCompleteListener(getActivity(),task->{
-                                binding.get().progressBar2.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    navigationController.navigateToList();
+                            } else {
+                                boolean check = task1.getResult().getProviders().isEmpty();
+                                if (check) {
+                                    User user = userDao.findByEmailSync(email);
+                                    if (user != null) {
+                                        firebaseAuth.createUserWithEmailAndPassword(email, "pass@123")
+                                                .addOnCompleteListener(Objects.requireNonNull(getActivity()), task -> {
+                                                    binding.get().progressBar2.setVisibility(View.GONE);
+                                                    if (task.isSuccessful()) {
+                                                        FirebaseUser fuser = task.getResult().getUser();
+                                                        Timber.d(fuser.getUid());
+                                                        user.setUid(fuser.getUid());
+                                                        appExecutors.diskIO().execute(() -> userDao.insert(user));
+                                                        sharedPreferences.edit().putBoolean("firebaseSync", true).apply();
+                                                        database.getReference().child("Users").child(fuser.getUid()).setValue(user);
+                                                        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+                                                        userRef.keepSynced(true);
+                                                        DatabaseReference msgRef = FirebaseDatabase.getInstance().getReference("Messages").child(fuser.getUid());
+                                                        msgRef.keepSynced(true);
+                                                        navigationController.navigateToList();
+                                                    } else {
+                                                        binding.get().firebaseStatus.setText(R.string.firebase_sync_error);
+                                                    }
+                                                });
+                                    } else {
+                                        logout();
+                                    }
                                 } else {
-                                    Timber.d("Cant login with firebase");
+                                    firebaseAuth.signInWithEmailAndPassword(email, "pass@123").addOnCompleteListener(Objects.requireNonNull(getActivity()), task -> {
+                                        binding.get().progressBar2.setVisibility(View.GONE);
+                                        if (task.isSuccessful()) {
+                                            sharedPreferences.edit().putBoolean("firebaseSync", true).apply();
+
+                                            navigationController.navigateToList();
+                                        } else {
+                                            Timber.d("Cant login with firebase");
+                                        }
+                                    });
                                 }
-                            });
-                        }
+                            }
+                        } catch (Exception e) {e.printStackTrace();logout();}
                     });
         } else {
             logout();

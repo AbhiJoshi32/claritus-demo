@@ -12,11 +12,11 @@ public class AndroidAuth {
         this.id = id;
     }
 
-    public String getToken() {
+    String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    void setToken(String token) {
         this.token = token;
     }
 }

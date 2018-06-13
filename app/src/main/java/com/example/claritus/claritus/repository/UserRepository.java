@@ -1,14 +1,13 @@
 package com.example.claritus.claritus.repository;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.example.claritus.claritus.api.ClaritusService;
-import com.example.claritus.claritus.auth.AuthActivity;
 import com.example.claritus.claritus.auth.login.LoginData;
 import com.example.claritus.claritus.auth.registration.RegistrationData;
 import com.example.claritus.claritus.db.UserDao;
@@ -56,6 +55,7 @@ public class UserRepository {
         String deviceId = sharedPreferences.getString("deviceId","");
         Call<String> call= claritusService.loginUser(deviceToken,deviceId,loginData.getEmail(),loginData.getPassword());
         call.enqueue(new Callback<String>() {
+            @SuppressLint("ApplySharedPref")
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Timber.d(response.body());
@@ -63,11 +63,11 @@ public class UserRepository {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body());
                         String code = jsonObject.optString("code");
-                        switch (jsonObject.optString("code")) {
+                        switch (code) {
                             case "200":
                                 LoginResponse loginResponse = gson.fromJson(response.body(), LoginResponse.class);
                                 String newToken = loginResponse.getApiCurrentToken();
-                                sharedPreferences.edit().putString("deviceToken", newToken).commit();
+                                sharedPreferences.edit().putString("deviceToken", newToken).apply();
                                 sharedPreferences.edit().putBoolean("isLoggedIn", true).apply();
                                 Timber.d(sharedPreferences.getString("deviceToken",""));
                                 sharedPreferences.edit().putString("email", loginData.getEmail()).apply();
@@ -89,8 +89,8 @@ public class UserRepository {
                     if (response.errorBody() != null) {
                         try {
                             message = response.errorBody().string();
-                        } catch (IOException ignored) {
-                            Timber.e(ignored, "error while parsing response");
+                        } catch (IOException e) {
+                            Timber.e(e, "error while parsing response");
                         }
                     }
                     if (message == null || message.trim().length() == 0) {
@@ -100,7 +100,7 @@ public class UserRepository {
                 }
             }
             @Override
-            public void onFailure(Call<String> call, Throwable t){
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t){
                 loginLiveData.setValue(Resource.error(t.getMessage(),null));
                 //Handle on Failure here
             }
@@ -147,8 +147,8 @@ public class UserRepository {
                     if (response.errorBody() != null) {
                         try {
                             message = response.errorBody().string();
-                        } catch (IOException ignored) {
-                            Timber.e(ignored, "error while parsing response");
+                        } catch (IOException e) {
+                            Timber.e(e, "error while parsing response");
                         }
                     }
                     if (message == null || message.trim().length() == 0) {
@@ -158,7 +158,7 @@ public class UserRepository {
                 }
             }
             @Override
-            public void onFailure(Call<String> call, Throwable t){
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t){
                 registerLiveData.setValue(Resource.error(t.getMessage(),null));
                 //Handle on Failure here
             }
@@ -173,6 +173,7 @@ public class UserRepository {
         Call<String> call= claritusService.getUser(deviceToken,
                 deviceId);
         call.enqueue(new Callback<String>() {
+            @SuppressLint("ApplySharedPref")
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 Timber.d(response.body());
@@ -201,8 +202,8 @@ public class UserRepository {
                     if (response.errorBody() != null) {
                         try {
                             message = response.errorBody().string();
-                        } catch (IOException ignored) {
-                            Timber.e(ignored, "error while parsing response");
+                        } catch (IOException e) {
+                            Timber.e(e, "error while parsing response");
                         }
                     }
                     if (message == null || message.trim().length() == 0) {
@@ -212,7 +213,7 @@ public class UserRepository {
                 }
             }
             @Override
-            public void onFailure(Call<String> call, Throwable t){
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t){
                 userLiveData.setValue(Resource.error(t.getMessage(),null));
                 //Handle on Failure here
             }
@@ -238,31 +239,4 @@ public class UserRepository {
     public void logout() {
         sharedPreferences.edit().putBoolean("isLoggedIn",false).apply();
     }
-
-//    public LiveData<Resource<User>> loadUser() {
-//        return new NetworkBoundResource<User,User>(appExecutors) {
-//            @Override
-//            protected void saveCallResult(@NonNull User item) {
-//                userDao.insert(item);
-//            }
-//
-//            @Override
-//            protected boolean shouldFetch(@Nullable User data) {
-//                return data == null;
-//            }
-//
-//            @NonNull
-//            @Override
-//            protected LiveData<User> loadFromDb() {
-//                String email = sharedPreferences.getString("email","");
-//                return userDao.findByUsername(email);
-//            }
-//
-//            @NonNull
-//            @Override
-//            protected LiveData<UserResponse<User>> createCall() {
-//                return claritusService.getUser();
-//            }
-//        }.asLiveData();
-//    }
 }

@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class RegistrationFragment extends Fragment implements Injectable {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentRegisterBinding dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_register,
@@ -62,8 +63,6 @@ public class RegistrationFragment extends Fragment implements Injectable {
             }
         });
         binding.get().setViewModel(registrationViewModel);
-        binding.get().registerButton.setOnClickListener(view -> {
-            registrationViewModel.onRegisterBtnClicked();
-        });
+        binding.get().registerButton.setOnClickListener(view -> registrationViewModel.onRegisterBtnClicked());
     }
 }

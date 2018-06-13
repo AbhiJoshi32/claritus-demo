@@ -55,7 +55,7 @@ public class LoginViewModel extends ViewModel {
         loginLiveData.setValue(loginData);
     }
 
-    public LiveData<Resource<String>> getToken() {
+    LiveData<Resource<String>> getToken() {
         return token;
     }
 

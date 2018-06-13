@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.main.Chat.ChatFragment;
 import com.example.claritus.claritus.main.FirebaseSync.FirebaseSyncFragment;
+import com.example.claritus.claritus.main.Profile.ProfileFragment;
 import com.example.claritus.claritus.main.UserList.UserListFragment;
 
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ public class MainNavigationController {
         this.fragmentManager = mainActivity.getSupportFragmentManager();
     }
 
-    public void navigateToSync() {
+    void navigateToSync() {
         FirebaseSyncFragment firebaseSyncFragment = new FirebaseSyncFragment();
         fragmentManager.beginTransaction()
                 .add(containerId, firebaseSyncFragment)
@@ -41,6 +42,14 @@ public class MainNavigationController {
         chatFragment.setArguments(args);
         fragmentManager.beginTransaction()
                 .replace(containerId,chatFragment)
+                .addToBackStack("chatFragment")
+                .commitAllowingStateLoss();
+    }
+
+    void navigateToProfile() {
+        ProfileFragment profileFragment = new ProfileFragment();
+        fragmentManager.beginTransaction()
+                .replace(containerId,profileFragment)
                 .addToBackStack("chatFragment")
                 .commitAllowingStateLoss();
     }

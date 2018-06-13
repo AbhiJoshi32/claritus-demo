@@ -1,6 +1,5 @@
 package com.example.claritus.claritus.main.Profile;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -17,29 +16,29 @@ import android.view.ViewGroup;
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.auth.AuthActivity;
 import com.example.claritus.claritus.databinding.ProfileFragmentBinding;
+import com.example.claritus.claritus.di.Injectable;
 import com.example.claritus.claritus.model.user.User;
 import com.example.claritus.claritus.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements Injectable {
     private ProfileFragmentBinding dataBinding;
     FirebaseDatabase database;
     FirebaseAuth auth;
     @Inject
     UserRepository userRepository;
     private User user;
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance("Users");
+        database = FirebaseDatabase.getInstance();
         setHasOptionsMenu(true);
     }
 
@@ -54,15 +53,23 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        userRepository.getUser(auth.getCurrentUser().getEmail()).observe(getActivity(), this::updateUI);
-        dataBinding.logout.setOnClickListener(view->{
-            userRepository.logout();
-            auth.signOut();
-            startActivity(new Intent(getActivity(), AuthActivity.class));
-        });
+        if (auth.getCurrentUser() == null) {
+            logout();
+        }
+        else {
+            userRepository.getUser(auth.getCurrentUser().getEmail()).observe(Objects.requireNonNull(getActivity()), this::updateUI);
+            dataBinding.logout.setOnClickListener(view -> logout());
+        }
+    }
+
+    private void logout() {
+        userRepository.logout();
+        auth.signOut();
+        startActivity(new Intent(getActivity(), AuthActivity.class));
     }
 
     private void updateUI(User user1) {
+        user = user1;
         dataBinding.name.setText(user1.getFirstName());
         dataBinding.phone.setText(user1.getPhone());
         dataBinding.address.setText(user1.getAddress());
@@ -70,19 +77,20 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.profile_menu,menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.profile_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.save) {
+            user.setUid(Objects.requireNonNull(auth.getCurrentUser()).getUid());
             user.setFirstName(dataBinding.name.getText().toString());
             user.setAddress(dataBinding.address.getText().toString());
             user.setPhone(dataBinding.phone.getText().toString());
             userRepository.saveUser(user);
-            database.getReference().child("Users").child(user.getUid()).setValue(user);
+            database.getReference().child("Users").child(auth.getCurrentUser().getUid()).setValue(user);
         }
         return true;
     }

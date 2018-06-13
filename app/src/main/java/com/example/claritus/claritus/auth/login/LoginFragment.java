@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import com.example.claritus.claritus.di.Injectable;
 import com.example.claritus.claritus.main.MainActivity;
 import com.example.claritus.claritus.model.Status;
 import com.example.claritus.claritus.utils.AutoClearedValue;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -39,7 +42,7 @@ public class LoginFragment extends Fragment implements Injectable {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentLoginBinding dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_login,
@@ -59,7 +62,7 @@ public class LoginFragment extends Fragment implements Injectable {
                     Timber.d(token.data);
                 else {
                     Timber.d(token.message);
-                    if (token.message.equals("not verified")) {
+                    if (Objects.requireNonNull(token.message).equals("not verified")) {
                         authNavigationController.navigateToVerification();
                     }
                 }
@@ -85,8 +88,6 @@ public class LoginFragment extends Fragment implements Injectable {
             loginViewModel.setEmail(email);
             loginViewModel.setPassword(password);
         });
-        binding.get().registerText.setOnClickListener(view -> {
-            authNavigationController.navigateToRegistration();
-        });
+        binding.get().registerText.setOnClickListener(view -> authNavigationController.navigateToRegistration());
     }
 }

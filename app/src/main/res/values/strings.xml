@@ -10,4 +10,5 @@
     <string name="email_error">Invalid Email</string>
     <string name="password_error">Invalid Password</string>
     <string name="firebase_config">Configuring with firebase</string>
+    <string name="firebase_sync_error">Some error occured</string>
 </resources>

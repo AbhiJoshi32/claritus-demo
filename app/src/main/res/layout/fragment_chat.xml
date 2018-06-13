@@ -8,6 +8,18 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <ImageButton
+        android:id="@+id/sendImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:src="@drawable/ic_action_camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/sendBtn" />
+
     <EditText
         android:id="@+id/msgInput"
         android:layout_width="0dp"
@@ -20,9 +32,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/sendBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintEnd_toStartOf="@+id/sendImg"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chatRecycler"
@@ -43,7 +54,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="16dp"
         android:background="@android:drawable/screen_background_light_transparent"
-        android:src="@drawable/ic_action_name"
+        android:src="@drawable/ic_action_send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

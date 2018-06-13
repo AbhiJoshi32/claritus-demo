@@ -1,26 +1,20 @@
 package com.example.claritus.claritus.splash;
 
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.claritus.claritus.R;
 import com.example.claritus.claritus.auth.AuthActivity;
 import com.example.claritus.claritus.main.MainActivity;
-import com.example.claritus.claritus.model.Resource;
+
 import com.example.claritus.claritus.model.Status;
-import com.example.claritus.claritus.repository.UserRepository;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
 import timber.log.Timber;
 
 public class SplashActivity extends AppCompatActivity{

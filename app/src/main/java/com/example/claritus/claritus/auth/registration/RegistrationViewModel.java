@@ -9,9 +9,11 @@ import android.databinding.ObservableField;
 import com.example.claritus.claritus.model.Resource;
 import com.example.claritus.claritus.repository.UserRepository;
 import com.example.claritus.claritus.utils.AbsentLiveData;
+
+import java.util.Objects;
+
 import javax.inject.Inject;
 
-import timber.log.Timber;
 
 public class RegistrationViewModel extends ViewModel {
     private MutableLiveData<RegistrationData> registrationLiveData = new MutableLiveData<>();
@@ -49,7 +51,7 @@ public class RegistrationViewModel extends ViewModel {
         fnameError.set(null);
         lnameError.set(null);
         phoneError.set(null);
-        if (email.get() == null || email.get().isEmpty()) {
+        if (email.get() == null || Objects.requireNonNull(email.get()).isEmpty()) {
             emailError.set("Invalid Email");
             isValid = false;
 
@@ -57,14 +59,14 @@ public class RegistrationViewModel extends ViewModel {
             emailError.set(null);
         }
 
-        if (password.get() == null || password.get().length() < 4) {
+        if (password.get() == null || Objects.requireNonNull(password.get()).length() < 4) {
             passwordError.set("Password too short");
             isValid = false;
         } else {
             passwordError.set(null);
         }
 
-        if (fname.get() == null || fname.get().isEmpty()) {
+        if (fname.get() == null || Objects.requireNonNull(fname.get()).isEmpty()) {
             fnameError.set("Cannot be empty");
             isValid = false;
         } else {
@@ -78,7 +80,7 @@ public class RegistrationViewModel extends ViewModel {
             lnameError.set(null);
         }
 
-        if (phone.get() == null || phone.get().length() < 4 || phone.get().isEmpty()) {
+        if (phone.get() == null || Objects.requireNonNull(phone.get()).length() < 4 || Objects.requireNonNull(phone.get()).isEmpty()) {
             phoneError.set("Password too short");
             isValid = false;
         } else {
@@ -87,62 +89,14 @@ public class RegistrationViewModel extends ViewModel {
         return isValid;
     }
 
-    public void onRegisterBtnClicked() {
+    void onRegisterBtnClicked() {
         if (validateInputs()) {
             RegistrationData registrationData = new RegistrationData(email.get(),password.get(),phone.get(),fname.get(),lname.get());
             registrationLiveData.setValue(registrationData);
         }
     }
 
-//    public void setEmail(String email) {
-//        Timber.d("Email set");
-//        RegistrationData registrationData= new RegistrationData();
-//        if (registrationLiveData.getValue() != null) {
-//            registrationData = registrationLiveData.getValue();
-//        }
-//        registrationData.setEmail(email);
-//        registrationLiveData.setValue(registrationData);
-//    }
-//
-//    public void setPassword(String password) {
-//        Timber.d("password set");
-//        RegistrationData registrationData= new RegistrationData();
-//        if (registrationLiveData.getValue() != null) {
-//            registrationData = registrationLiveData.getValue();
-//        }
-//        registrationData.setPassword(password);
-//        registrationLiveData.setValue(registrationData);
-//    }
-//
-//    public void setFirstName(String firstName) {
-//        RegistrationData registrationData= new RegistrationData();
-//        if (registrationLiveData.getValue() != null) {
-//            registrationData = registrationLiveData.getValue();
-//        }
-//        registrationData.setFirstName(firstName);
-//        registrationLiveData.setValue(registrationData);
-//    }
-//
-//    public void setLastName(String lastName) {
-//        RegistrationData registrationData= new RegistrationData();
-//        if (registrationLiveData.getValue() != null) {
-//            registrationData = registrationLiveData.getValue();
-//        }
-//        registrationData.setLastName(lastName);
-//        registrationLiveData.setValue(registrationData);
-//    }
-//
-//    public void setPhone(String phone) {
-//
-//        RegistrationData registrationData= new RegistrationData();
-//        if (registrationLiveData.getValue() != null) {
-//            registrationData = registrationLiveData.getValue();
-//        }
-//        registrationData.setPhone(phone);
-//        registrationLiveData.setValue(registrationData);
-//    }
-
-    public LiveData<Resource<String>> getToken() {
+    LiveData<Resource<String>> getToken() {
         return token;
     }
 }

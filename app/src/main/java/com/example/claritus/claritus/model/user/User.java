@@ -9,8 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "user")
 public class User {
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private Long id;
+    @SerializedName("uid")
     private String uid;
     @SerializedName("address")
     private String Address;
@@ -46,6 +47,14 @@ public class User {
     private String Phone;
     @SerializedName("state")
     private String State;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUid() {
         return uid;
